@@ -1,3 +1,8 @@
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class StudentList implements IDisplayable {
     private Node head = new Node(), tail = new Node();
     private int length = 0;
@@ -76,6 +81,15 @@ public class StudentList implements IDisplayable {
 
     }
 
+    public void saveToFile(String filename){
+        try (PrintWriter output = new PrintWriter(filename)) {
+            output.print(this.toString());
+            output.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(StudentList.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 
     @Override
     public void display() {
@@ -89,6 +103,21 @@ public class StudentList implements IDisplayable {
             node = node.next;
             count++;
         }
+    }
+
+
+    public String toString(){
+        String string ="";
+        Node node = head.next;
+        int count = 0;
+        while (count <= length) {
+            if (node.previous != null && node.next != null) {
+                string += "\n"+node.data.toString();
+            }
+            node = node.next;
+            count++;
+        }
+        return string;
     }
 
     public Node createDummyList() {

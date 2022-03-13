@@ -74,4 +74,9 @@ public class Student implements IDisplayable {
     public void display() {
         System.out.println(Id + " - " + name + "\n" + "Marks: " + marks + "\nCategory: " + category + "\nDate of enrollment: " + formater.format(dateOfEnrollment) + "\nNumber of subjects: " + numberOfSubjects);
     }
+
+    @Override
+    public String toString() {
+        return Id + " - " + name + "\n" + "Marks: " + marks + "\nCategory: " + category + "\nDate of enrollment: " + formater.format(dateOfEnrollment) + "\nNumber of subjects: " + numberOfSubjects;
+    }
 }
