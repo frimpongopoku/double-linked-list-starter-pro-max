@@ -1,6 +1,9 @@
+import sun.tools.java.Environment;
+
 public class App {
-     InputHelper helper = new InputHelper();
-     StudentList list = new StudentList();
+    InputHelper helper = new InputHelper();
+    StudentList list = new StudentList();
+
     public static void main(String[] args) throws Exception {
 
         //--- Testing IDisplayable class
@@ -43,12 +46,13 @@ public class App {
 
         //-------------- APP BEGINNING HERE --------------
         App app = new App();
+        System.out.println("Welcome to the student admin work book.\nPlease choose an option from the menu displayed below");
         app.launchMenu();
 
     }
 
     public void launchMenu() {
-        System.out.println("Welcome to the student admin work book.\nPlease choose an option from the menu displayed below");
+
         System.out.print("\nA. Add Student");
         System.out.print("\tB. Find Student By Id");
         System.out.print("\tC. Find Student By Name");
@@ -56,48 +60,76 @@ public class App {
         System.out.print("\nE. Load Students From File");
         System.out.print("\tQ. Quit\n");
 
-        char character = helper.readCharacter("Enter menu option: ", "ABCDEF");
+        char character = helper.readCharacter("Enter menu option", "ABCDEFQ");
         switch (character) {
             case 'A': {
                 addStudent();
+                break;
             }
             case 'B': {
                 findStudentById();
+                break;
             }
             case 'C': {
                 findStudentByName();
+                break;
             }
             case 'D': {
                 displayStudents();
+                break;
             }
             case 'E': {
                 loadStudentsFromFile();
+                break;
             }
             case 'Q': {
                 quit();
+                break;
             }
         }
 
     }
 
     public void addStudent() {
-
+        String name = helper.readString("Name of new student");
+        String cat = helper.readString("Student enrollment type(full-time/part-time)");
+        Student student = new Student(name, cat, list.length+1);
+        list.add(new Node(student));
+        launchMenu();
     }
 
     public void findStudentById() {
-
+        int id = helper.readInt("Whats the ID of the student you are looking for?");
+        Student student = list.findById(id);
+        if (student == null) System.out.println("Sorry, could not find student with this ID");
+        else student.display();
+        launchMenu();
     }
 
     public void findStudentByName() {
+        String name = helper.readString("Whats the name of the student you are looking for?");
+        Student student = list.findByName(name);
+        if (student == null) System.out.println("Sorry, could not find student with this name");
+        else student.display();
+        launchMenu();
     }
 
     public void displayStudents() {
+        list.display();
+        launchMenu();
     }
 
     public void loadStudentsFromFile() {
+
     }
 
     public void quit() {
+        if (list.length > 0) {
+            String filename = helper.readString("How should we save your list? (Filename)");
+            if (filename.isEmpty()) filename = "New-save.txt";
+            list.saveToFile(filename);
+            System.out.println(String.format("Your file has been saved as %s. Thanks for using the student admin work book, see you soon!", filename));
+        }
     }
 
 

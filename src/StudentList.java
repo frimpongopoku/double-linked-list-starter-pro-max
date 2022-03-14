@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 public class StudentList implements IDisplayable {
     private Node head = new Node(), tail = new Node();
-    private int length = 0;
+    public int length = 0;
 
     public StudentList() {
     }
@@ -36,8 +36,10 @@ public class StudentList implements IDisplayable {
 
 
     public void insert(Node n, int position) {
-        if (length == 0) {
+        if (length <= 0) {
             head.next = n;
+            n.previous = head;
+            n.next = tail;
             tail.previous = n;
         } else {
             int count = 0;
@@ -53,6 +55,23 @@ public class StudentList implements IDisplayable {
         }
         length++;
     }
+
+    public void add(Node n) {
+        if (length == 0) {
+            head.next = n;
+            n.previous = head;
+            n.next = tail;
+            tail.previous = n;
+        } else {
+            Node node = tail.previous;
+            node.next = n;
+            n.previous = node;
+            n.next = tail;
+            tail.previous = n;
+        }
+        length++;
+    }
+
 
     public void delete(int position) {
 
@@ -81,7 +100,7 @@ public class StudentList implements IDisplayable {
 
     }
 
-    public void saveToFile(String filename){
+    public void saveToFile(String filename) {
         try (PrintWriter output = new PrintWriter(filename)) {
             output.print(this.toString());
             output.close();
@@ -106,13 +125,14 @@ public class StudentList implements IDisplayable {
     }
 
 
-    public String toString(){
-        String string ="";
+    public String toString() {
+        String string = "";
         Node node = head.next;
         int count = 0;
         while (count <= length) {
             if (node.previous != null && node.next != null) {
-                string += "\n"+node.data.toString();
+                if(string.isEmpty()) string = node.data.toString();
+                else string += "\n" + node.data.toString();
             }
             node = node.next;
             count++;

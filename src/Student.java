@@ -72,11 +72,11 @@ public class Student implements IDisplayable {
 
     @Override
     public void display() {
-        System.out.println(Id + " - " + name + "\n" + "Marks: " + marks + "\nCategory: " + category + "\nDate of enrollment: " + formater.format(dateOfEnrollment) + "\nNumber of subjects: " + numberOfSubjects);
+        System.out.println(Id + " - " + name + ", " + "Marks: " + marks + ", Category: " + category + ", Date of enrollment: " + formater.format(dateOfEnrollment) + ", Number of subjects: " + numberOfSubjects);
     }
 
     @Override
     public String toString() {
-        return Id + " - " + name + "\n" + "Marks: " + marks + "\nCategory: " + category + "\nDate of enrollment: " + formater.format(dateOfEnrollment) + "\nNumber of subjects: " + numberOfSubjects;
+        return Id + "," + name + ","  + marks + "," + category + "," + formater.format(dateOfEnrollment) + "," + numberOfSubjects;
     }
 }
