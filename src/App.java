@@ -58,6 +58,7 @@ public class App {
         System.out.print("\tC. Find Student By Name");
         System.out.print("\tD. Display Students");
         System.out.print("\nE. Load Students From File");
+        System.out.print("\nF. Remove Student From Records");
         System.out.print("\tQ. Quit\n");
 
         char character = helper.readCharacter("Enter menu option", "ABCDEFQ");
@@ -82,6 +83,10 @@ public class App {
                 loadStudentsFromFile();
                 break;
             }
+            case 'F': {
+                removeStudentFromList();
+                break;
+            }
             case 'Q': {
                 quit();
                 break;
@@ -93,7 +98,7 @@ public class App {
     public void addStudent() {
         String name = helper.readString("Name of new student");
         String cat = helper.readString("Student enrollment type(full-time/part-time)");
-        Student student = new Student(name, cat, list.length+1);
+        Student student = new Student(name, cat, list.length + 1);
         list.add(new Node(student));
         launchMenu();
     }
@@ -120,7 +125,23 @@ public class App {
     }
 
     public void loadStudentsFromFile() {
+        String filename = helper.readString("Filename");
+        if (filename.isEmpty()) {
+            System.out.println("You did not provide any filename...");
+        } else {
+            StudentList loadedList = list.loadFromFile(filename.trim());
+            this.list = loadedList;
+            loadedList.display();
 
+        }
+        launchMenu();
+    }
+
+    public void removeStudentFromList(){
+        int id = helper.readInt("Whats the ID of the student you want to remove?");
+        int position = list.getPositionOfStudent(id);
+        list.delete(position);
+        launchMenu();
     }
 
     public void quit() {

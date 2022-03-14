@@ -1,5 +1,12 @@
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,7 +22,9 @@ public class StudentList implements IDisplayable {
         int count = 0;
         Node node = head.next;
         while (count < length - 1) {
-            if (node.data != null && id == node.data.getId()) return node.data;
+            if (node.data != null && id == node.data.getId()) {
+                return node.data;
+            }
             node = node.next;
             count++;
         }
@@ -26,12 +35,27 @@ public class StudentList implements IDisplayable {
         int count = 0;
         Node node = head.next;
         while (count < length - 1) {
-            if (node.data != null && name.equals(node.data.getName())) return node.data;
+            if (node.data != null && name.equals(node.data.getName())) {
+                return node.data;
+            }
             node = node.next;
 
             count++;
         }
         return null;
+    }
+    public int getPositionOfStudent(int id){
+        int count = 0;
+        Node node = head.next;
+        while (count < length - 1) {
+            if (node.data != null && id == node.data.getId()) {
+                return count;
+            }
+            node = node.next;
+
+            count++;
+        }
+        return -1;
     }
 
 
@@ -110,6 +134,38 @@ public class StudentList implements IDisplayable {
     }
 
 
+    public StudentList loadFromFile(String filename) {
+        StudentList newList = new StudentList();
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            String[] temp;
+            String line = br.readLine();
+            while (line != null) {
+                temp = line.split(",");
+                String name, category;
+                int mark, id, subs;
+                id = Integer.parseInt(temp[0]);
+                name = temp[1];
+                mark = Integer.parseInt(temp[2]);
+                category = temp[3];
+                Date date = formatter.parse(temp[4]);
+                subs = Integer.parseInt(temp[5]);
+                Student newStudent = new Student(name, category, id);
+                newStudent.setMarks(mark);
+                newStudent.setDateOfEnrollment(date);
+                newStudent.setNumberOfSubjects(subs);
+                newList.add(new Node(newStudent));
+                line = br.readLine();
+            }
+
+            br.close();
+        } catch (IOException | ParseException ex) {
+            Logger.getLogger(StudentList.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return newList;
+    }
+
+
     @Override
     public void display() {
         Node node = head.next;
@@ -117,7 +173,6 @@ public class StudentList implements IDisplayable {
         while (count <= length) {
             if (node.previous != null && node.next != null) {
                 node.data.display();
-                System.out.println("...............");
             }
             node = node.next;
             count++;
@@ -131,7 +186,7 @@ public class StudentList implements IDisplayable {
         int count = 0;
         while (count <= length) {
             if (node.previous != null && node.next != null) {
-                if(string.isEmpty()) string = node.data.toString();
+                if (string.isEmpty()) string = node.data.toString();
                 else string += "\n" + node.data.toString();
             }
             node = node.next;
